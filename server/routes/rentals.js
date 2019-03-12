@@ -8,7 +8,7 @@ router.get('', function(req, res) {
     });
 });
 
-router.get(':id', function(req, res) {
+router.get('/:id', function(req, res) {
     const rentalId = req.params.id;
 
     Rental.findById(rentalId, function(err, foundRental) {
