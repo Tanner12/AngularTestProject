@@ -23,5 +23,5 @@ app.use('/api/v1/users', userRoutes);
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, function () {
-    console.log('App am running');
+    console.log('App is running');
 });
