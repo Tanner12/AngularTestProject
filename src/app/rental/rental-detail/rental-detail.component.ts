@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { RentalService } from '../shared/rental.service';
 import { Rental } from '../shared/rental.model';
 

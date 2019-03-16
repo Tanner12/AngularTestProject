@@ -19,7 +19,7 @@ export class RentalListComponent implements OnInit {
 
         rentalObservable.subscribe(
             (rentals: Rental[]) => {
-                this.rentals = rentals;
+              this.rentals = rentals;
             },
             (err) => {
 
