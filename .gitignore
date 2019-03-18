@@ -2,3 +2,7 @@
 /server/config/dev.js
 
 .DS_Store
+
+/node_modules/bcrypt/*
+
+/dist
