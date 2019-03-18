@@ -15,6 +15,7 @@ import { RentalDetailBookingComponent } from './rental-detail/rental-detail-book
 
 import { RentalService } from './shared/rental.service';
 import { HelperService } from '../common/service/helper.service';
+import { BookingService } from '../booking/shared/booking.service';
 import { UppercasePipe } from '../common/pipes/uppercase.pipe';
 
 import { AuthGuard } from '../auth/shared/auth.guard';
@@ -52,7 +53,8 @@ const routes: Routes = [
     ],
     providers: [
         RentalService,
-        HelperService
+        HelperService,
+        BookingService
     ]
 })
 

@@ -6,10 +6,19 @@ import * as moment from 'moment';
 @Injectable()
 export class HelperService {
 
+    private makeProperDateFormat(dateString, trueFalse: boolean) {
+        if (!trueFalse) return dateString;
+        const dateArray = dateString.split("/");
+        let newDate = dateArray[2] + "-" + dateArray[1] + "-" + dateArray[0];
+        return newDate;
+    }
+
     private getRangeOfDates(startAt, endAt, dateFormat) {
         const tempDates = [];
-        const mEndAt = moment(endAt);
-        let mStartAt = moment(startAt);
+        let change = true;
+        if (startAt.includes("-")) change = false;
+        const mEndAt = moment(this.makeProperDateFormat(endAt, change));
+        let mStartAt = moment(this.makeProperDateFormat(startAt, change));
 
         while (mStartAt < mEndAt) {
             tempDates.push(mStartAt.format(dateFormat));

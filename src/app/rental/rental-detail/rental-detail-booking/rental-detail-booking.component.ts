@@ -1,30 +1,43 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ViewChild, ViewEncapsulation } from "@angular/core";
 import { Rental } from '../../shared/rental.model';
 import { Booking } from "src/app/booking/shared/booking.model";
 import { HelperService } from 'src/app/common/service/helper.service';
+import { BookingService } from 'src/app/booking/shared/booking.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
+import { DaterangePickerComponent } from 'ng2-daterangepicker';
 import * as moment from 'moment';
 
 @Component({
+  encapsulation: ViewEncapsulation.None,
   selector: "bwm-rental-detail-booking",
   templateUrl: "./rental-detail-booking.component.html",
   styleUrls: ["./rental-detail-booking.component.scss"]
 })
 export class RentalDetailBookingComponent implements OnInit {
   @Input() rental: Rental;
+  @ViewChild(DaterangePickerComponent)
+    private picker: DaterangePickerComponent;
 
   newBooking: Booking;
+  modalRef: any;
 
   daterange: any = {};
   bookedOutDates: any[] = [];
+  errors: any[] = [];
 
   options: any = {
     locale: { format: Booking.DATE_FORMAT },
     alwaysShowCalendars: false,
     opens: "left",
+    autoUpdateInput: false,
     isInvalidDate: this.checkForInvalidDates.bind(this)
   };
 
-  constructor(private helper: HelperService) { }
+  constructor(private helper: HelperService,
+              private modalService: NgbModal,
+              private bookingService: BookingService,
+              private toastr: ToastrService) { }
 
   ngOnInit() {
     this.newBooking = new Booking();
@@ -47,11 +60,43 @@ export class RentalDetailBookingComponent implements OnInit {
     }
   }
 
-  reserveRental() {
-    console.log(this.newBooking);
+  private addBookedDates(startDate, endDate) {
+    const dateRange = this.helper.getBookingRangeOfDates(startDate, endDate);
+    this.bookedOutDates.push(...dateRange);
   }
 
-  selectedDate(value: any, datepicker?: any) {
+  private resetDatePicker() {
+    this.picker.datePicker.setStartDate(moment());
+    this.picker.datePicker.setEndDate(moment());
+    this.picker.datePicker.element.val('');
+  }
+
+  openConfirmModal(content) {
+    this.errors = [];
+    this.modalRef = this.modalService.open(content);
+  }
+
+  createBooking() {
+    this.newBooking.rental = this.rental;
+    this.bookingService.createBooking(this.newBooking).subscribe(
+      (bookingData) => {
+        this.addBookedDates(this.newBooking.startAt, this.newBooking.endAt);
+        this.newBooking = new Booking();
+        this.modalRef.close();
+        this.resetDatePicker();
+        this.toastr.success(
+          'Booking has been successfully created. Check your booking in the manage section.', 
+          'Success');
+      },
+      (errorResponse: any) => {
+        this.errors = errorResponse.error.errors;
+        
+      });;
+
+  }
+
+  selectedDate(value: any, datepicker: any) {
+    this.options.autoUpdateInput = true;
     this.newBooking.startAt = this.helper.formatBookingDate(value.start);
     this.newBooking.endAt = this.helper.formatBookingDate(value.end);
     this.newBooking.days = -(value.start.diff(value.end, 'days'));
