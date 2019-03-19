@@ -9,7 +9,7 @@ export class HelperService {
     private makeProperDateFormat(dateString, trueFalse: boolean) {
         if (!trueFalse) return dateString;
         const dateArray = dateString.split("/");
-        let newDate = dateArray[2] + "-" + dateArray[1] + "-" + dateArray[0];
+        let newDate = dateArray[2] + "-" + dateArray[0] + "-" + dateArray[1];
         return newDate;
     }
 
