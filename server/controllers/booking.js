@@ -15,9 +15,7 @@ exports.createBooking = function(req, res) {
           .populate('user')
           .exec(function(err, foundRental) {
         if (err) {
-            return res.status(422).send({
-                errors: normalizeErrors(err.errors)
-            });
+            return res.status(422).send({errors: normalizeErrors(err.errors)});
         }
 
         if (foundRental.user.id === user.id ) {
@@ -33,9 +31,7 @@ exports.createBooking = function(req, res) {
 
             booking.save(function(err) {
                 if (err) {
-                    return res.status(422).send({
-                        errors: normalizeErrors(err.errors)
-                    });
+                    return res.status(422).send({errors: normalizeErrors(err.errors)});
                 }
 
                 foundRental.save();
